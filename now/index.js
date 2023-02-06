@@ -22,7 +22,7 @@ const reloadClock = () => {
   if (seconds < 10) seconds = "0" + seconds;
 
   // 時刻の色を設定する
-  let fontColor = color ?? "black";
+  const fontColor = color ?? "black";
 
   if (type === "long") {
     const result = `${years}/${months}/${days} ${hours}:${minutes}:${seconds}`;
