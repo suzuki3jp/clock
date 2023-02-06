@@ -2,8 +2,8 @@ const currentURLStr = window.location.href;
 const currentURL = new URL(currentURLStr);
 const UrlPrams = currentURL.searchParams;
 const color = UrlPrams.get("color");
-const [targetY, targetM, targetD] = UrlPrams.get("date").split("-");
-const [targetH, targetMin] = UrlPrams.get("time").split(":");
+let date = UrlPrams.get("date");
+let time = UrlPrams.get("time");
 
 const secondsToHour = (seconds) => {
   seconds = parseInt(seconds);
@@ -19,6 +19,18 @@ const secondsToHour = (seconds) => {
 
 const reloadClock = () => {
   const $clock = document.getElementById("clock");
+
+  const currentDate = new Date(
+    Date.now() + (new Date().getTimezoneOffset() + 9 * 60) * 60 * 1000
+  );
+  const currentY = currentDate.getFullYear();
+  const currentM = currentDate.getMonth() + 1;
+  const currentD = currentDate.getDate();
+  if (!date) date = `${currentY}-${currentM}-${currentD}`;
+  if (!time) time = "0:0";
+
+  const [targetY, targetM, targetD] = date.split("-");
+  const [targetH, targetMin] = time.split(":");
   const targetDate = new Date(
     targetY,
     targetM - 1,
@@ -28,7 +40,7 @@ const reloadClock = () => {
   );
 
   const diffSeconds = Math.floor(
-    (targetDate.getTime() - new Date().getTime()) / 1000
+    (targetDate.getTime() - currentDate.getTime()) / 1000
   );
 
   let { hours, minutes, seconds } = secondsToHour(diffSeconds);
